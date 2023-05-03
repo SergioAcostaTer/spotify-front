@@ -1,118 +1,270 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import Image from "next/image";
+import { Inter } from "next/font/google";
+import { Search } from "@/components/Search";
+import { useEffect, useRef, useState } from "react";
+import Home from "@/components/Home";
+import { setGlobalState, useGlobalState } from "@/context/globalState";
+import { Controls } from "@/components/Controls";
+import { ControlPC } from "@/components/ControlPC";
+import useWindowSize from "@/hooks/useWidth";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+export default function Base() {
+  const [mode, setMode] = useState(0);
+  const [search, setSearch] = useState(false);
+  const MusicPlayer = useRef(null);
+  const MusicLabel = useRef(null);
+  // const [width, setWidth] = useState(0);
+
+  const song = useGlobalState("song")[0];
+  const repeat = useGlobalState("repeat")[0];
+  const playing = useGlobalState("playing")[0];
+  const controls = useGlobalState("controls")[0];
+  const queue = useGlobalState("queue")[0];
+  const playlistIndex = useGlobalState("playlistIndex")[0];
+  const songTime = useGlobalState("songTime")[0];
+  const [actualTime, setActualTime] = useState(0);
+
+  useEffect(() => {
+    if (MusicLabel.current) {
+      //make darker song.color
+      // const color = (song?.color & 0xfefefe) >> 1;
+      MusicLabel.current.style.backgroundColor = `${song?.color}`;
+    }
+
+    // MusicLabel.current.style.backgroundImage = "pink";
+    // console.log(song?.color);
+  }, [song]);
+
+  // save queue AND song to localstorage
+
+  // useEffect(() => {
+  //   localStorage.setItem("song", JSON.stringify(song));
+  //   localStorage.setItem("queue", JSON.stringify(queue));
+  // }, [song, queue]);
+
+  // load queue AND song from localstorage if exists
+
+  // useEffect(() => {
+  //   // when user touch the screen
+  //   if (localStorage.getItem("song")) {
+  //     setGlobalState("song", JSON.parse(localStorage.getItem("song")));
+  //   }
+  //   if (localStorage.getItem("queue")) {
+  //     setGlobalState("queue", JSON.parse(localStorage.getItem("queue")));
+  //   }
+  // }, []);
+
+  function newSong() {
+    if (song) {
+      MusicPlayer.current.pause();
+      MusicPlayer.current.load();
+      MusicPlayer.current.play();
+    }
+  }
+
+  function managePlayAndPause() {
+    if (playing) {
+      MusicPlayer.current.pause();
+    } else {
+      MusicPlayer.current.play();
+    }
+    console.log(MusicPlayer.current.currentTime, song?.duration);
+  }
+
+  function nextSong() {
+    console.log(playlistIndex, queue);
+    if (repeat) {
+      MusicPlayer.current.currentTime = 0;
+      MusicPlayer.current.play();
+    } else {
+      if (playlistIndex < queue.length - 1) {
+        setGlobalState("song", queue[playlistIndex + 1]);
+        setGlobalState("playlistIndex", playlistIndex + 1);
+      } else if (playlistIndex + 1 == queue.length) {
+        setGlobalState("song", queue[0]);
+        setGlobalState("playlistIndex", 0);
+      }
+    }
+  }
+
+  function previousSong() {
+    console.log(playlistIndex, queue);
+    if (playlistIndex > 0) {
+      setGlobalState("song", queue[playlistIndex - 1]);
+      setGlobalState("playlistIndex", playlistIndex - 1);
+    } else if (playlistIndex == 0) {
+      setGlobalState("song", queue[queue.length - 1]);
+      setGlobalState("playlistIndex", queue.length - 1);
+    }
+  }
+
+  function changeCurrentTime() {
+    MusicPlayer.current.currentTime = songTime;
+  }
+
+  useEffect(() => {
+    newSong();
+  }, [song]);
+
+  useEffect(() => {
+    managePlayAndPause();
+
+    // if (playing) {
+    //   setGlobalState("songTime", MusicPlayer.current.currentTime);
+    // }
+  }, [playing]);
+
+  useEffect(() => {
+    changeCurrentTime();
+  }, [songTime]);
+
+  //on audio ended
+
+  // useEffect(() => {
+  //   const width = window?.innerWidth;
+  //   setWidth(width);
+  // }, [window?.innerWidth]);
+
+  const { width } = useWindowSize();
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <>
+      <audio
+        src={song?.audio?.url}
+        ref={MusicPlayer}
+        onEnded={nextSong}
+        onTimeUpdate={(e) => {
+          setActualTime(e.target.currentTime);
+        }}
+        onLoad={managePlayAndPause}
+        // onPause={() => setGlobalState("playing", false)}
+        // onPlay={() => setGlobalState("playing", true)}
+      ></audio>
+
+      {mode === 0 && width < 640 ? <Home /> : ""}
+      {mode === 1 && width < 640 ? <Search search /> : ""}
+      {mode === 2 && width < 640 ? <h1>Library</h1> : ""}
+
+      <Controls time={actualTime} />
+      <ControlPC time={actualTime} />
+
+      {song?.title ? (
+        <div className="w-full fixed bottom-16 flex justify-center cursor-pointer mb-1 z-30  sm:hidden">
+          <div
+            className="flex flex-row w-11/12 items-center justify-between  rounded-md h-14"
+            ref={MusicLabel}
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            <div
+              className="flex items-center w-full noselect"
+              onClick={() => setGlobalState("controls", !controls)}
+            >
+              <img
+                src={song?.thumbnail}
+                alt={song?.title}
+                className="h-10 m-0 ml-2"
+              />
+              <div className="pl-4 h-10">
+                <p className="text-lg leading-6 select-none">{song?.title}</p>
+                <p className="text-sm leading-3 select-none">{song?.artist}</p>
+              </div>
+            </div>
+
+            <div
+              className="right-0 h-full flex items-center"
+              onClick={() => setGlobalState("playing", !playing)}
+            >
+              {playing ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  className="bi bi-pause btn h-10 w-10 cursor-pointer mr-2 z-30"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z" />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  className="bi bi-pause btn h-10 w-10 cursor-pointer mr-2 z-30"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z" />
+                </svg>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+
+      <div className="w-full h-24 bottom-0 fixed justify-around items-end grid grid-cols-3 z-20 pl-8 pr-8 bg-gradient-to-t from-black pb-2 sm:hidden">
+        <div
+          className="flex justify-center flex-col items-center"
+          onClick={() => {
+            setMode(0)
+            setSearch(false)
+
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-house h-6 w-6 cursor-pointer"
+            viewBox="0 0 16 16"
+          >
+            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z" />
+          </svg>
+          <p className="text-xs select-none">Home</p>
+        </div>
+        <div
+          className="flex justify-center flex-col items-center"
+          onClick={() => {
+            setMode(1);
+            setSearch(!search);
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-search h-6 w-6 cursor-pointer"
+            viewBox="0 0 16 16"
+          >
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+          </svg>
+          <p className="text-xs select-none">Search</p>
+        </div>
+        <div
+          className="flex justify-center flex-col items-center"
+          onClick={() => {
+            setMode(2);
+            setSearch(false)
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-collection h-6 w-6 cursor-pointer"
+            viewBox="0 0 16 16"
+          >
+            <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z" />
+          </svg>
+          <p className="text-xs select-none">Your library</p>
         </div>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    </>
+  );
 }
