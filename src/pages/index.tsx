@@ -139,6 +139,8 @@ export default function Base() {
         onError={() => {
           downloadSong(song?.youtubeId, `${song?.title} - ${song?.artist}`).then(
             (res) => {
+              console.log(res);
+              
               setGlobalState("song", { ...song, audio: {
                 url: res,
               } });

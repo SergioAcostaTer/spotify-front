@@ -39,5 +39,5 @@ export default async function downloadSong(id: string, title: string) {
   // clean up Url
   window.URL.revokeObjectURL(blobUrl);
 
-  return "done";
+  return result;
 }
