@@ -15,7 +15,7 @@ export default async function postSongSource(song: any) {
       const data = await response.json();
       console.log(data);
       data?.audio?.allData?.map((song: any) => {
-        console.log(song);
+        console.log(song?.url);
       });
       return data;
     } else {
