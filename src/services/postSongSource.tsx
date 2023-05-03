@@ -11,6 +11,7 @@ export default async function postSongSource(song: any) {
     });
     if (response.ok) {
       const data = await response.json();
+      console.log(data);
       return data;
     } else {
       throw new Error(`Request failed with status ${response.status}`);
