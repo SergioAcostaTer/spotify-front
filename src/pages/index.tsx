@@ -7,6 +7,7 @@ import { setGlobalState, useGlobalState } from "@/context/globalState";
 import { Controls } from "@/components/Controls";
 import { ControlPC } from "@/components/ControlPC";
 import useWindowSize from "@/hooks/useWidth";
+import downloadSong from "@/services/singleSongDownload";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -135,6 +136,15 @@ export default function Base() {
         src={song?.audio?.url}
         ref={MusicPlayer}
         onEnded={nextSong}
+        onError={() => {
+          downloadSong(song?.youtubeId, `${song?.title} - ${song?.artist}`).then(
+            (res) => {
+              setGlobalState("song", { ...song, audio: {
+                url: res,
+              } });
+            }
+
+        }}
         onTimeUpdate={(e) => {
           setActualTime(e.target.currentTime);
         }}
@@ -209,9 +219,8 @@ export default function Base() {
         <div
           className="flex justify-center flex-col items-center"
           onClick={() => {
-            setMode(0)
-            setSearch(false)
-
+            setMode(0);
+            setSearch(false);
           }}
         >
           <svg
@@ -249,7 +258,7 @@ export default function Base() {
           className="flex justify-center flex-col items-center"
           onClick={() => {
             setMode(2);
-            setSearch(false)
+            setSearch(false);
           }}
         >
           <svg
