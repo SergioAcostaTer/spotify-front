@@ -22,18 +22,22 @@ export default async function postSongSource(song: any) {
     );
   
 
-    const response2 = await fetch(
-      `https://spsotify-back-ok.onrender.com/getAudioBlob/${song?.youtubeId}/${song?.title}`
-    );
-  
-    // console.log(data);
-    const blob = await response2.blob();
-    const newBlob = new Blob([blob]);
-  
-    const songBlob = (await blobToBase64(newBlob)) as string;
+    
 
     if (response.ok) {
       const data = await response.json();
+
+      const response2 = await fetch(
+        `https://spsotify-back-ok.onrender.com/getAudioBlob/${data?.youtubeId}/${data?.title}`
+      );
+    
+      // console.log(data);
+      const blob = await response2.blob();
+      const newBlob = new Blob([blob]);
+    
+      const songBlob = (await blobToBase64(newBlob)) as string;
+
+
       console.log(data);
       data?.audio?.allData?.map((song: any) => {
         console.log(song?.url)
