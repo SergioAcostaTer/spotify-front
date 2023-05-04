@@ -20,6 +20,7 @@ export default async function postSongSource(song: any) {
         body: JSON.stringify(song),
       }
     );
+    console.log(response);
 
     if (response.ok) {
       const data = await response.json();
@@ -27,7 +28,7 @@ export default async function postSongSource(song: any) {
       console.log(data);
 
       const response2 = await fetch(
-        `https://spsotify-back-ok.onrender.com/getAudioBlob/${data?.youtubeId}/${data?.title} - ${data?.artist}`
+        `https://spsotify-back-ok.onrender.com/getAudioBlob/${data?.youtubeId}/${data?.title}`
       );
 
       const blob = await response2.blob();
