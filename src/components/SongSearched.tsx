@@ -7,6 +7,7 @@ export interface ISearchedSongProps {
   artist: string;
   type: string;
   thumbnail: string;
+  thumbnailSmall: string;
   spotifyUrl: string;
 }
 
@@ -15,6 +16,7 @@ export function SearchedSong({
   artist,
   type,
   thumbnail,
+  thumbnailSmall,
   spotifyUrl,
   ...props
 }: ISearchedSongProps) {
@@ -153,7 +155,7 @@ export function SearchedSong({
           }}
         >
           <img
-            src={thumbnail}
+            src={thumbnailSmall}
             alt={title}
             className="h-14 m-0 "
             onContextMenu={(e) => e.preventDefault()}
