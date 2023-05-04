@@ -62,6 +62,7 @@ export default function Base() {
     if (song) {
       MusicPlayer.current.pause();
       MusicPlayer.current.load();
+
       MusicPlayer.current.play();
     }
   }

@@ -32,11 +32,10 @@ export default async function downloadSong(id: string, title: string) {
   const link = document.createElement("a");
   link.href = blobUrl;
   link.setAttribute("download", `${title}.mp3`);
+  link.setAttribute("type", "audio/mpeg");
   document.body.appendChild(link);
   link.click();
   link.parentNode?.removeChild(link);
-
-  // clean up Url
   window.URL.revokeObjectURL(blobUrl);
 
   return result;

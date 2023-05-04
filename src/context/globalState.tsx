@@ -1,6 +1,5 @@
 import { createGlobalState } from "react-hooks-global-state";
 
-
 const { setGlobalState, useGlobalState } = createGlobalState({
   song: {
     title: "",
@@ -8,11 +7,14 @@ const { setGlobalState, useGlobalState } = createGlobalState({
     type: "",
     thumbnail: "",
     spotifyUrl: "",
-    audio: {url: ""},
+    audio: { url: "" },
     id: "",
-    duration: 0,
+    duration: {
+      spotify: 0,
+      youtube: 0,
+    },
     youtubeId: "",
-    color: ""
+    color: "",
   },
   playing: false,
   queue: [],
@@ -23,7 +25,7 @@ const { setGlobalState, useGlobalState } = createGlobalState({
   controls: false,
   songTime: 0,
   moreInfo: false,
-  info: {}
+  info: {},
 });
 
 export { setGlobalState, useGlobalState };

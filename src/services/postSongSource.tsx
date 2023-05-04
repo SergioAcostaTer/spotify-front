@@ -11,16 +11,13 @@ export default async function postSongSource(song: any) {
 
   try {
     console.log(song);
-    const response = await fetch(
-      `https://spsotify-back-ok.onrender.com/sourceMusic`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(song),
-      }
-    );
+    const response = await fetch(`http://localhost:666/sourceMusic`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(song),
+    });
 
     //time to get response
 
@@ -28,25 +25,7 @@ export default async function postSongSource(song: any) {
       const data = await response.json();
 
       const t1 = performance.now();
-
-      const response2 = await fetch(
-        `https://spsotify-back-ok.onrender.com/getAudioBlob/${data?.youtubeId}/${data?.title}`
-      );
-
-      console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
-
-      const blob = await response2.blob();
-      const newBlob = new Blob([blob]);
-
-      const songBlob = (await blobToBase64(newBlob)) as string;
-
-      const audioBlob = `data:audio/mpeg;base64,${songBlob.split(",")[1]}`;
-   
-      data.audioBlob = audioBlob;
-
- 
-      const t2 = performance.now();
-      console.log(`Call to doSomething took ${t2 - t0} milliseconds.`);
+      console.log(`Call to postSongSource took ${t1 - t0} milliseconds.`);
 
       console.log(data);
 
