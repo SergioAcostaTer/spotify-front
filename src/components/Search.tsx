@@ -27,7 +27,7 @@ export function Search({ search }: ISearchProps) {
 
   React.useEffect(() => {
     getLiked().then((data) => setLikedData(data));
-  }, [localStorage, toggleLike]);
+  }, [toggleLike]);
 
   React.useEffect(() => {
     if (moreInfo) {
