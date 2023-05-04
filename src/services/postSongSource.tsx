@@ -11,7 +11,7 @@ export default async function postSongSource(song: any) {
 
   try {
     console.log(song);
-    const response = await fetch(`http://localhost:666/sourceMusic`, {
+    const response = await fetch(`https://spsotify-back-ok.onrender.com/sourceMusic`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
