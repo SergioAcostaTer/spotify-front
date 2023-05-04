@@ -7,6 +7,9 @@ async function blobToBase64(blob: Blob) {
 }
 
 export default async function postSongSource(song: any) {
+  //measures time
+  const t0 = performance.now();
+
   try {
     console.log(song);
     const response = await fetch(
@@ -39,6 +42,14 @@ export default async function postSongSource(song: any) {
       data.audioBlob = audioBlob;
 
       console.log(data);
+
+      //measures time
+      const t1 = performance.now();
+
+      console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
+      //seconds
+      console.log((t1 - t0) / 1000);
+
       return data;
     } else {
       throw new Error(`Request failed with status ${response.status}`);
