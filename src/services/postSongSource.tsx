@@ -50,6 +50,7 @@ export default async function postSongSource(song: any) {
       // return addBlob;
 
       data.audio.blob = songBlob
+      console.log(data)
       return data;
     } else {
       throw new Error(`Request failed with status ${response.status}`);
