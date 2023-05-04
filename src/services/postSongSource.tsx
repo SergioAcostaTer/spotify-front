@@ -1,3 +1,12 @@
+async function blobToBase64(blob: Blob) {
+  return new Promise((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
+
+
 export default async function postSongSource(song: any) {
   try {
     console.log(song);
@@ -11,13 +20,27 @@ export default async function postSongSource(song: any) {
         body: JSON.stringify(song),
       }
     );
+  
+
+    const response2 = await fetch(
+      `https://spsotify-back-ok.onrender.com/getAudioBlob/${id}/${title}`
+    );
+  
+    // console.log(data);
+    const blob = await response2.blob();
+    const newBlob = new Blob([blob]);
+  
+    const songBlob = (await blobToBase64(newBlob)) as string;
+
     if (response.ok) {
       const data = await response.json();
       console.log(data);
       data?.audio?.allData?.map((song: any) => {
         console.log(song?.url)
       });
-      return data;
+      const addBlob = data
+      addBlob.audio.blob = songBlob.split(",")[1]
+      return addBlob;
     } else {
       throw new Error(`Request failed with status ${response.status}`);
     }
