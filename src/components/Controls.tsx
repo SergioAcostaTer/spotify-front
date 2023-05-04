@@ -34,6 +34,14 @@ export function Controls({ time }: IControlsProps) {
     Controls.current.style.backgroundImage = `linear-gradient(0, black 0%, ${song?.color} 100%)`;
     download.current.classList.remove("downloaded");
     setIsDownloaded(false);
+
+    //async await check like
+    async function asyncCheckLike() {
+      const res = await checkLike(song);
+      setLiked(res);
+    }
+
+    asyncCheckLike();
   }, [song]);
 
   React.useEffect(() => {
