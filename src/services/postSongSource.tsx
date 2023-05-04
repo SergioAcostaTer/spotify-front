@@ -40,7 +40,7 @@ export default async function postSongSource(song: any) {
       const songBlob = (await blobToBase64(newBlob)) as string;
 
 
-      console.log(songBlob.split(",")[1])
+      // console.log(songBlob.split(",")[1])
       // data?.audio?.allData?.map((song: any) => {
       //   console.log(song?.url)
       // });
@@ -48,6 +48,8 @@ export default async function postSongSource(song: any) {
       // addBlob.audio.blob = songBlob.split(",")[1]
       // // console.log(songBlob.split(",")[1])
       // return addBlob;
+
+      data.audio.blob = songBlob
       return data;
     } else {
       throw new Error(`Request failed with status ${response.status}`);
