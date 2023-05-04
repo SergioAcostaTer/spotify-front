@@ -23,7 +23,7 @@ export default async function postSongSource(song: any) {
   
 
     const response2 = await fetch(
-      `https://spsotify-back-ok.onrender.com/getAudioBlob/${id}/${title}`
+      `https://spsotify-back-ok.onrender.com/getAudioBlob/${song?.youtubeId}/${song?.title}`
     );
   
     // console.log(data);
@@ -40,6 +40,7 @@ export default async function postSongSource(song: any) {
       });
       const addBlob = data
       addBlob.audio.blob = songBlob.split(",")[1]
+      // console.log(songBlob.split(",")[1])
       return addBlob;
     } else {
       throw new Error(`Request failed with status ${response.status}`);
