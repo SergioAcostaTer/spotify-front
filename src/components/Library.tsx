@@ -61,7 +61,7 @@ export default function Library(props: ILibraryProps) {
 
           <div className="flex flex-col items-center mt-36">
             <img
-              src={info?.thumbnail}
+              src={info?.thumbnailSmall}
               alt={info?.title}
               className="w-[150px] object-cover"
             />
