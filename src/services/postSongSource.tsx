@@ -27,25 +27,28 @@ export default async function postSongSource(song: any) {
     if (response.ok) {
       const data = await response.json();
 
-      const response2 = await fetch(
-        `https://spsotify-back-ok.onrender.com/getAudioBlob/${data?.youtubeId}/${data?.title}`
-      );
-    
-      // console.log(data);
-      const blob = await response2.blob();
-      const newBlob = new Blob([blob]);
-    
-      const songBlob = (await blobToBase64(newBlob)) as string;
-
-
       console.log(data);
-      data?.audio?.allData?.map((song: any) => {
-        console.log(song?.url)
-      });
-      const addBlob = data
-      addBlob.audio.blob = songBlob.split(",")[1]
-      // console.log(songBlob.split(",")[1])
-      return addBlob;
+
+      // const response2 = await fetch(
+      //   `https://spsotify-back-ok.onrender.com/getAudioBlob/${data?.youtubeId}/${data?.title}`
+      // );
+    
+      // // console.log(data);
+      // const blob = await response2.blob();
+      // const newBlob = new Blob([blob]);
+    
+      // const songBlob = (await blobToBase64(newBlob)) as string;
+
+
+      // console.log(data);
+      // data?.audio?.allData?.map((song: any) => {
+      //   console.log(song?.url)
+      // });
+      // const addBlob = data
+      // addBlob.audio.blob = songBlob.split(",")[1]
+      // // console.log(songBlob.split(",")[1])
+      // return addBlob;
+      return data;
     } else {
       throw new Error(`Request failed with status ${response.status}`);
     }
