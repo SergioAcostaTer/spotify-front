@@ -22,10 +22,22 @@ export function SearchedSong({
 }: ISearchedSongProps) {
   const queue = useGlobalState("queue")[0];
   const song = useGlobalState("song")[0];
+  const color = React.useRef(null);
 
   const [touchStart, setTouchStart] = React.useState(null);
   const [touchEnd, setTouchEnd] = React.useState(null);
   const [movedDiv, setMovedDiv] = React.useState(null);
+
+  React.useEffect(() => {
+    if (song.title === title && song.artist === artist) {
+      color.current.style.color = "#22c55e";
+    } else {
+      color.current.style.color = "white";
+    }
+  }, [song, song.title]); 
+
+  
+
 
   // the required distance between touchStart and touchEnd to be detected as a swipe
   const minSwipeDistance = 100;
@@ -83,6 +95,7 @@ export function SearchedSong({
         artist,
         type,
         thumbnail,
+        thumbnailSmall,
         spotifyUrl,
         ...props,
       };
@@ -107,7 +120,7 @@ export function SearchedSong({
   };
 
   return (
-    <div className="relative">
+    <div className="relative transition-all duration-300 border-t-[0.2px] border-b-[0.2px] border-[rgba(100,100,100,.2)] active:bg-slate-300">
       <div className="w-full h-full absolute bg-[#1DB954] left-[-100vw] flex items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -132,13 +145,14 @@ export function SearchedSong({
         onTouchEnd={onTouchEnd}
       >
         <div
-          className="flex flex-row w-[100%] items-center"
+          className="flex flex-row w-[100%] items-center p-2 pl-2 pr-2 "
           onClick={async () => {
             const song = {
               title,
               artist,
               type,
               thumbnail,
+              thumbnailSmall,
               spotifyUrl,
               ...props,
             };
@@ -161,10 +175,10 @@ export function SearchedSong({
             onContextMenu={(e) => e.preventDefault()}
           />
 
-          <div className="flex flex-row pl-6 flex-col">
-            <p className="noselect select-none">{title}</p>
+          <div className="flex flex-row pl-6 flex-col" ref={color}>
+            <p className="noselect select-none proxima">{title}</p>
             <div className="flex flex-row noselect select-none">
-              <p>
+              <p className="proxima">
                 {type.charAt(0).toUpperCase() + type.slice(1)} - {artist}
               </p>
             </div>
@@ -178,6 +192,7 @@ export function SearchedSong({
               artist,
               type,
               thumbnail,
+              thumbnailSmall,
               spotifyUrl,
               ...props,
             };

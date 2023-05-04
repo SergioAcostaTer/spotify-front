@@ -26,6 +26,7 @@ const { setGlobalState, useGlobalState } = createGlobalState({
   songTime: 0,
   moreInfo: false,
   info: {},
+  toggleLike: false,
 });
 
 export { setGlobalState, useGlobalState };

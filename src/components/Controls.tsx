@@ -9,6 +9,7 @@ export interface IControlsProps {
 }
 
 export function Controls({ time }: IControlsProps) {
+  const toggleLike = useGlobalState("toggleLike")[0];
   const song = useGlobalState("song")[0];
   const controls = useGlobalState("controls")[0];
   const playing = useGlobalState("playing")[0];
@@ -40,6 +41,7 @@ export function Controls({ time }: IControlsProps) {
       const res = await checkLike(song);
       setLiked(res);
     }
+    console.log(song);
 
     asyncCheckLike();
   }, [song]);
@@ -158,14 +160,15 @@ export function Controls({ time }: IControlsProps) {
       <div className="flex pl-8 pr-8 w-full flex-col">
         <div className="flex w-full justify-between ">
           <div className="flex flex-col">
-            <p className="text-2xl">{song?.title}</p>
-            <p>{song?.artist}</p>
+            <p className="text-2xl proxima">{song?.title}</p>
+            <p className="proxima">{song?.artist}</p>
           </div>
           <p
             onClick={async () => {
               addLiked(song);
               const res = await checkLike(song);
               setLiked(res);
+              setGlobalState("toggleLike", !toggleLike);
             }}
           >
             {liked ? "Liked" : "Not Liked"}

@@ -10,6 +10,7 @@ import checkLike from "@/services/checkLike";
 export interface ILibraryProps {}
 
 export default function Library(props: ILibraryProps) {
+  const toggleLike = useGlobalState("toggleLike")[0];
   const [data, setData] = React.useState<any>([]);
   const menu = React.useRef(null);
   const moreInfo = useGlobalState("moreInfo")[0];
@@ -34,11 +35,11 @@ export default function Library(props: ILibraryProps) {
 
   React.useEffect(() => {
     getLiked().then((data) => setData(data));
-  }, [localStorage]);
+  }, [localStorage, toggleLike]);
 
   return (
     <>
-     <div
+      <div
         ref={menu}
         className="transition-all duration-100 fixed bottom-[-100vh] w-full h-full z-[50] bg-[linear-gradient(0,rgba(0,0,0,1)0%,rgba(0,0,0,1)83%,rgba(0,0,0,0.5635504201680672)96%,rgba(0,0,0,0)100%)]"
       >
@@ -61,7 +62,7 @@ export default function Library(props: ILibraryProps) {
 
           <div className="flex flex-col items-center mt-36">
             <img
-              src={info?.thumbnailSmall}
+              src={info?.thumbnail}
               alt={info?.title}
               className="w-[150px] object-cover"
             />
@@ -77,11 +78,18 @@ export default function Library(props: ILibraryProps) {
               setGlobalState("moreInfo", false);
             }}
           >
-            <h2 onClick={async () =>{
-              addLiked(info)
-              const res = await checkLike(info);
-              setLiked(res);
-            }} className="text-xl select-none">{liked ? "liked" : "not liked"}</h2>
+            <h2
+              onClick={async () => {
+                addLiked(info);
+                getLiked().then((data) => setData(data));
+
+                const res = await checkLike(info);
+                setLiked(res);
+              }}
+              className="text-xl select-none"
+            >
+              {liked ? "liked" : "not liked"}
+            </h2>
           </div>
           <div
             onClick={() => {

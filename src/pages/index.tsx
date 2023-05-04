@@ -184,8 +184,8 @@ export default function Base() {
                 className="h-10 m-0 ml-2"
               />
               <div className="pl-4 h-10">
-                <p className="text-lg leading-6 select-none">{song?.title}</p>
-                <p className="text-sm leading-3 select-none">{song?.artist}</p>
+                <p className="text-lg leading-6 select-none proxima">{song?.title}</p>
+                <p className="text-sm leading-3 select-none proxima">{song?.artist}</p>
               </div>
             </div>
 

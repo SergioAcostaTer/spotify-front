@@ -56,6 +56,21 @@ body {
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+/* import proxima nova and montserrat from google*/
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,700|Proxima+Nova:400,500,700&display=swap');
+
+/* create classes for fonts */
+
+.mont {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.proxima {
+  font-family: 'Proxima Nova', sans-serif;
+  font-weight: 500;
+}
+
 
 input[type=range] {
   height: 24px;
