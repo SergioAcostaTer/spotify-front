@@ -137,15 +137,19 @@ export default function Base() {
         ref={MusicPlayer}
         onEnded={nextSong}
         onError={() => {
-          downloadSong(song?.youtubeId, `${song?.title} - ${song?.artist}`).then(
-            (res) => {
-              console.log(res);
-              
-              setGlobalState("song", { ...song, audio: {
-                url: res,
-              } });
-            }
+          downloadSong(
+            song?.youtubeId,
+            `${song?.title} - ${song?.artist}`
+          ).then((res) => {
+            console.log(res);
 
+            setGlobalState("song", {
+              ...song,
+              audio: {
+                url: res,
+              },
+            });
+          });
         }}
         onTimeUpdate={(e) => {
           setActualTime(e.target.currentTime);
