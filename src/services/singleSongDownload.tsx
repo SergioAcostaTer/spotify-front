@@ -24,7 +24,7 @@ export default async function downloadSong(id: string, title: string) {
     name: `${title}.mp3`,
     size: fileSizeInByte,
   };
-  console.log(result);
+  console.log(result)
   //   return result;
 
   const blobUrl = window.URL.createObjectURL(newBlob);
