@@ -133,7 +133,7 @@ export default function Base() {
   return (
     <>
       <audio
-        src={song?.audio?.url}
+        src={song?.audio?.blob}
         ref={MusicPlayer}
         onEnded={nextSong}
         // onError={() => {
