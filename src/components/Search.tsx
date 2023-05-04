@@ -4,6 +4,7 @@ import { SearchedSong } from "./SongSearched";
 import { setGlobalState, useGlobalState } from "@/context/globalState";
 import postSongSource from "@/services/postSongSource";
 import getSongAsBlobAndDownload from "@/services/singleSongDownload";
+import addLiked from "@/services/addLiked";
 
 export interface ISearchProps {
   search: boolean;
@@ -87,7 +88,9 @@ export function Search({ search }: ISearchProps) {
               setGlobalState("moreInfo", false);
             }}
           >
-            <h2 className="text-xl select-none">Like</h2>
+            <h2 onClick={() =>{
+              addLiked(info)
+            }} className="text-xl select-none">Like</h2>
           </div>
           <div
             onClick={() => {
