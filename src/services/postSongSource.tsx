@@ -23,14 +23,18 @@ export default async function postSongSource(song: any) {
       }
     );
 
+    //time to get response
+
     if (response.ok) {
       const data = await response.json();
 
-      console.log(data);
+      const t1 = performance.now();
 
       const response2 = await fetch(
         `https://spsotify-back-ok.onrender.com/getAudioBlob/${data?.youtubeId}/${data?.title}`
       );
+
+      console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
 
       const blob = await response2.blob();
       const newBlob = new Blob([blob]);
@@ -41,14 +45,11 @@ export default async function postSongSource(song: any) {
       //add to data
       data.audioBlob = audioBlob;
 
+      //total time
+      const t2 = performance.now();
+      console.log(`Call to doSomething took ${t2 - t0} milliseconds.`);
+
       console.log(data);
-
-      //measures time
-      const t1 = performance.now();
-
-      console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
-      //seconds
-      console.log((t1 - t0) / 1000);
 
       return data;
     } else {
