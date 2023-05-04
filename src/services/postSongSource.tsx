@@ -20,10 +20,12 @@ export default async function postSongSource(song: any) {
         body: JSON.stringify(song),
       }
     );
+    const data = await response.json();
+
     console.log(response);
+    console.log(data);
 
     if (response.ok) {
-      const data = await response.json();
 
       console.log(data);
 
