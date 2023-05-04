@@ -13,6 +13,7 @@ export default async function postSongSource(song: any) {
       `https://spsotify-back-ok.onrender.com/sourceMusic`,
       {
         method: "POST",
+        mode: "no-cors", // no-cors, *cors, same-origin
         headers: {
           "Content-Type": "application/json",
         },
@@ -22,6 +23,8 @@ export default async function postSongSource(song: any) {
 
     if (response.ok) {
       const data = await response.json();
+
+      console.log(data);
 
       const response2 = await fetch(
         `https://spsotify-back-ok.onrender.com/getAudioBlob/${data?.youtubeId}/${data?.title} - ${data?.artist}`
