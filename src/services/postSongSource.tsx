@@ -13,19 +13,15 @@ export default async function postSongSource(song: any) {
       `https://spsotify-back-ok.onrender.com/sourceMusic`,
       {
         method: "POST",
-        mode: "no-cors", // no-cors, *cors, same-origin
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(song),
       }
     );
-    const data = await response.json();
-
-    console.log(response);
-    console.log(data);
 
     if (response.ok) {
+      const data = await response.json();
 
       console.log(data);
 
@@ -39,7 +35,8 @@ export default async function postSongSource(song: any) {
       const songBlob = (await blobToBase64(newBlob)) as string;
 
       const audioBlob = `data:audio/mpeg;base64,${songBlob.split(",")[1]}`;
-      data.audio.blob = audioBlob;
+      //add to data
+      data.audioBlob = audioBlob;
 
       console.log(data);
       return data;
