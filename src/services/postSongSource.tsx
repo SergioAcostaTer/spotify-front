@@ -39,6 +39,8 @@ export default async function postSongSource(song: any) {
     
       const songBlob = (await blobToBase64(newBlob)) as string;
 
+      const audioBlob = `data:audio/mpeg;base64,${songBlob.split(",")[1]}`
+
 
       // console.log(songBlob.split(",")[1])
       // data?.audio?.allData?.map((song: any) => {
@@ -49,7 +51,7 @@ export default async function postSongSource(song: any) {
       // // console.log(songBlob.split(",")[1])
       // return addBlob;
 
-      data.audio.blob = songBlob
+      data.audio.blob = audioBlob
       console.log(data)
       return data;
     } else {
