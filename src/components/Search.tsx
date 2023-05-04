@@ -265,7 +265,7 @@ export function Search({ search }: ISearchProps) {
 
 
 
-          <div className="flex flex-col w-full mt-10 bg-[#121212]">
+          <div className="flex flex-col w-full mt-10 bg-[#121212] ">
             {likedData?.map((song: any) => (
               <SearchedSong {...song} key={song?.id} />
             ))}
