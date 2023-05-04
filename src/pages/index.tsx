@@ -136,21 +136,21 @@ export default function Base() {
         src={song?.audio?.url}
         ref={MusicPlayer}
         onEnded={nextSong}
-        onError={() => {
-          downloadSong(
-            song?.youtubeId,
-            `${song?.title} - ${song?.artist}`
-          ).then((res) => {
-            console.log(res);
+        // onError={() => {
+        //   downloadSong(
+        //     song?.youtubeId,
+        //     `${song?.title} - ${song?.artist}`
+        //   ).then((res) => {
+        //     console.log(res);
 
-            setGlobalState("song", {
-              ...song,
-              audio: {
-                url: res,
-              },
-            });
-          });
-        }}
+        //     setGlobalState("song", {
+        //       ...song,
+        //       audio: {
+        //         url: res,
+        //       },
+        //     });
+        //   });
+        // }}
         onTimeUpdate={(e) => {
           setActualTime(e.target.currentTime);
         }}
