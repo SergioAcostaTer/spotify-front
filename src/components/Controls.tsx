@@ -1,4 +1,6 @@
 import { setGlobalState, useGlobalState } from "@/context/globalState";
+import addLiked from "@/services/addLiked";
+import checkLike from "@/services/checkLike";
 import getSongAsBlobAndDownload from "@/services/singleSongDownload";
 import * as React from "react";
 
@@ -12,6 +14,7 @@ export function Controls({ time }: IControlsProps) {
   const playing = useGlobalState("playing")[0];
   const repeat = useGlobalState("repeat")[0];
   const queue = useGlobalState("queue")[0];
+  const [liked, setLiked] = React.useState(false);
   const playlistIndex = useGlobalState("playlistIndex")[0];
   const [isDownloaded, setIsDownloaded] = React.useState(false);
   const songTime = useGlobalState("songTime")[0];
@@ -150,7 +153,15 @@ export function Controls({ time }: IControlsProps) {
             <p className="text-2xl">{song?.title}</p>
             <p>{song?.artist}</p>
           </div>
-          <p>Like</p>
+          <p
+            onClick={async () => {
+              addLiked(song);
+              const res = await checkLike(song);
+              setLiked(res);
+            }}
+          >
+            {liked ? "Liked" : "Not Liked"}
+          </p>
         </div>
         <div className="mt-5">
           <input

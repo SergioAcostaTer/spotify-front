@@ -7,7 +7,6 @@ async function blobToBase64(blob: Blob) {
 }
 
 export default async function postSongSource(song: any) {
-  //measures time
   const t0 = performance.now();
 
   try {
@@ -42,10 +41,10 @@ export default async function postSongSource(song: any) {
       const songBlob = (await blobToBase64(newBlob)) as string;
 
       const audioBlob = `data:audio/mpeg;base64,${songBlob.split(",")[1]}`;
-      //add to data
+   
       data.audioBlob = audioBlob;
 
-      //total time
+ 
       const t2 = performance.now();
       console.log(`Call to doSomething took ${t2 - t0} milliseconds.`);
 

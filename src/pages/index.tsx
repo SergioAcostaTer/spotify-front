@@ -8,6 +8,7 @@ import { Controls } from "@/components/Controls";
 import { ControlPC } from "@/components/ControlPC";
 import useWindowSize from "@/hooks/useWidth";
 import downloadSong from "@/services/singleSongDownload";
+import Library from "@/components/Library";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -161,7 +162,7 @@ export default function Base() {
 
       {mode === 0 && width < 640 ? <Home /> : ""}
       {mode === 1 && width < 640 ? <Search search /> : ""}
-      {mode === 2 && width < 640 ? <h1>Library</h1> : ""}
+      {mode === 2 && width < 640 ? <Library/> : ""}
 
       <Controls time={actualTime} />
       <ControlPC time={actualTime} />
