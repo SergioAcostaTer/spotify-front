@@ -5,6 +5,8 @@ import { setGlobalState, useGlobalState } from "@/context/globalState";
 import postSongSource from "@/services/postSongSource";
 import getSongAsBlobAndDownload from "@/services/singleSongDownload";
 import addLiked from "@/services/addLiked";
+import checkLike from "@/services/checkLike";
+import getLiked from "@/services/getLiked";
 
 export interface ISearchProps {
   search: boolean;
@@ -19,6 +21,13 @@ export function Search({ search }: ISearchProps) {
   const info = useGlobalState("info")[0];
   const queue = useGlobalState("queue")[0];
   const input = React.useRef(null);
+  const [liked, setLiked] = React.useState(false);
+  const toggleLike = useGlobalState("toggleLike")[0];
+  const [likedData, setLikedData] = React.useState<any>([]);
+
+  React.useEffect(() => {
+    getLiked().then((data) => setLikedData(data));
+  }, [localStorage, toggleLike]);
 
   React.useEffect(() => {
     if (moreInfo) {
@@ -88,9 +97,48 @@ export function Search({ search }: ISearchProps) {
               setGlobalState("moreInfo", false);
             }}
           >
-            <h2 onClick={() =>{
-              addLiked(info)
-            }} className="text-xl select-none">Like</h2>
+            <div
+              onClick={async () => {
+                addLiked(info);
+                const res = await checkLike(info);
+                setLiked(res);
+                setGlobalState("toggleLike", !toggleLike);
+              }}
+              className="text-xl select-none"
+            >
+              {liked ? (
+                <div className="flex items-center justify-center gap-2">
+                  <h2>Added to likes</h2>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-heart-fill h-5 w-5"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+                    />
+                  </svg>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-2">
+                  <h2>Add to likes</h2>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-heart-fill h-5 w-5"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                  </svg>
+                </div>
+              )}
+            </div>
           </div>
           <div
             onClick={() => {
@@ -149,7 +197,8 @@ export function Search({ search }: ISearchProps) {
                 className="absolute left-4 h-6 w-6 cursor-pointer"
                 viewBox="0 0 16 16"
                 onClick={() => {
-                  input.current.blur();
+                  // input.current.blur();
+                  setActive(false);
                 }}
               >
                 <path
@@ -205,6 +254,21 @@ export function Search({ search }: ISearchProps) {
                 }}
               />
             </form>
+          </div>
+
+
+
+
+          
+
+
+
+
+
+          <div className="flex flex-col w-full mt-10 bg-[#121212]">
+            {likedData?.map((song: any) => (
+              <SearchedSong {...song} key={song?.id} />
+            ))}
           </div>
         </div>
       )}

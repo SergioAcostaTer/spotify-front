@@ -13,7 +13,7 @@ import Library from "@/components/Library";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Base() {
-  const [mode, setMode] = useState(0);
+  const [mode, setMode] = useState(1);
   const [search, setSearch] = useState(false);
   const MusicPlayer = useRef(null);
   const MusicLabel = useRef(null);
@@ -161,7 +161,7 @@ export default function Base() {
         // onPlay={() => setGlobalState("playing", true)}
       ></audio>
 
-      {mode === 0 && width < 640 ? <Home /> : ""}
+      {/* {mode === 0 && width < 640 ? <Home /> : ""} */}
       {mode === 1 && width < 640 ? <Search search /> : ""}
       {mode === 2 && width < 640 ? <Library/> : ""}
 
@@ -223,7 +223,7 @@ export default function Base() {
         ""
       )}
 
-      <div className="w-full h-24 bottom-0 fixed justify-around items-end grid grid-cols-3 z-20 pl-8 pr-8 bg-gradient-to-t from-black pb-2 sm:hidden">
+      <div className="w-full h-24 bottom-0 fixed justify-around items-end grid grid-cols-3 z-20 pl-8 pr-8 bg-gradient-to-t from-black pb-2 hidden sm:hidden">
         <div
           className="flex justify-center flex-col items-center"
           onClick={() => {
