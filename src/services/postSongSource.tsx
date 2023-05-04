@@ -27,20 +27,20 @@ export default async function postSongSource(song: any) {
     if (response.ok) {
       const data = await response.json();
 
-      console.log(data);
-
-      // const response2 = await fetch(
-      //   `https://spsotify-back-ok.onrender.com/getAudioBlob/${data?.youtubeId}/${data?.title}`
-      // );
-    
-      // // console.log(data);
-      // const blob = await response2.blob();
-      // const newBlob = new Blob([blob]);
-    
-      // const songBlob = (await blobToBase64(newBlob)) as string;
-
-
       // console.log(data);
+
+      const response2 = await fetch(
+        `https://spsotify-back-ok.onrender.com/getAudioBlob/${data?.youtubeId}/${data?.title}`
+      );
+
+      // // console.log(data);
+      const blob = await response2.blob();
+      const newBlob = new Blob([blob]);
+    
+      const songBlob = (await blobToBase64(newBlob)) as string;
+
+
+      console.log(songBlob.split(",")[1])
       // data?.audio?.allData?.map((song: any) => {
       //   console.log(song?.url)
       // });
